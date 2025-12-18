@@ -156,61 +156,53 @@ export const joinEventController = async (req, res) => {
             });
         }
 
-        const updatedEvent = await EventModel.findOneAndUpdate(
-            {
-                _id: id,
-                "attendees._id": { $ne: userId },
-                $expr: {
-                    $lt: [{ $size: "$attendees" }, "$capacity"]
-                }
-            },
-            {
-                $push: {
-                    attendees: {
-                        _id: user._id,
-                        name: user.name,
-                        mail: user.email,
-                        joinedAt: new Date()
-                    }
-                }
-            },
-            {
-                new: true
-            }
+        const event = await EventModel.findById(id);
+        if (!event) {
+            return res.status(404).send({
+                success: false,
+                message: "Event not found"
+            });
+        }
+
+        const alreadyJoined = event.attendees.some(
+            attendee => attendee._id.toString() === userId
         );
 
-        if (!updatedEvent) {
-            const event = await EventModel.findById(id);
+        if (alreadyJoined) {
+            return res.status(400).send({
+                success: false,
+                message: "You have already joined this event"
+            });
+        }
 
-            if (!event) {
-                return res.status(404).send({
-                    success: false,
-                    message: "Event not found"
-                });
-            }
-
-            const alreadyJoined = event.attendees.some(
-                a => a._id.toString() === userId
-            );
-
-            if (alreadyJoined) {
-                return res.status(400).send({
-                    success: false,
-                    message: "You have already joined this event"
-                });
-            }
-
+        if (event.attendees.length >= event.capacity) {
             return res.status(400).send({
                 success: false,
                 message: "Event is full"
             });
         }
 
+        const nextSerialNumber =
+            event.attendees.length === 0
+                ? 1
+                : Math.max(...event.attendees.map(a => a.serialNumber || 0)) + 1;
+
+        event.attendees.push({
+            _id: user._id,
+            serialNumber: nextSerialNumber,
+            name: user.name,
+            mail: user.email,
+            joinedAt: new Date()
+        });
+
+        await event.save();
+
         res.status(200).send({
             success: true,
             message: "Successfully joined the event",
-            event: updatedEvent
+            event
         });
+
     } catch (error) {
         console.error(error);
         res.status(500).send({

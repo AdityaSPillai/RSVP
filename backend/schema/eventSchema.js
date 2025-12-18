@@ -49,6 +49,10 @@ const eventSchema = new mongoose.Schema({
         ref: 'User',
         required: true
       },
+      serialNumber: {
+        type: Number,
+        required: true
+      },
       name: {
         type: String,
         required: true

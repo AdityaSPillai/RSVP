@@ -1,11 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import { useState } from 'react';
+import AttendeesModal from './AttendeesModal';
 import '../styles/EventCard.css';
 
 const EventCard = ({ event, refresh, onEdit }) => {
     const { auth } = useAuth();
     const navigate = useNavigate();
+    const [showAttendees, setShowAttendees] = useState(false);
     const CATEGORY_COLORS = {
         Conference: "#F2545B",
         Workshop: "#A93F55",
@@ -128,12 +131,21 @@ const EventCard = ({ event, refresh, onEdit }) => {
                 </div>
 
                 {isHost ? (
-                    <button
-                        className="btn-secondary-event"
-                        onClick={() => onEdit && onEdit(event)}
-                    >
-                        Edit Event
-                    </button>
+                    <div className="host-action-buttons">
+                        <button
+                            className="btn-secondary-event"
+                            onClick={() => setShowAttendees(true)}
+                        >
+                            Attendees
+                        </button>
+
+                        <button
+                            className="btn-secondary-event"
+                            onClick={() => onEdit && onEdit(event)}
+                        >
+                            Edit Event
+                        </button>
+                    </div>
                 ) : !auth.user ? (
                     isFull ? (
                         <button className="btn-disabled-event" disabled>
@@ -161,6 +173,12 @@ const EventCard = ({ event, refresh, onEdit }) => {
                     </button>
                 )}
             </div>
+            {showAttendees && (
+                <AttendeesModal
+                    attendees={event.attendees}
+                    onClose={() => setShowAttendees(false)}
+                />
+            )}
         </article>
     );
 };

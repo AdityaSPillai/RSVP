@@ -20,6 +20,7 @@ const EventCard = ({ event, refresh, onEdit }) => {
     );
 
     const isFull = event.attendees.length >= event.capacity;
+    const aboutToBeFull = event.attendees.length >= event.capacity * 0.9;
     const spotsLeft = event.capacity - event.attendees.length;
 
     const joinEvent = async () => {
@@ -55,22 +56,37 @@ const EventCard = ({ event, refresh, onEdit }) => {
                         Sold Out
                     </span>
                 )}
+
+                {aboutToBeFull && !isAttending && !isFull && (
+                    <span className="event-badge sold-out">
+                        Filling Fast
+                    </span>
+                )}
             </div>
 
             {/* CONTENT */}
             <div className="event-card-body">
                 <h3 className="event-title">{event.title}</h3>
-
-                <p className="event-meta">
-                    {event.date} • {event.time}
-                </p>
-
-                <p className="event-location">{event.location}</p>
+                <div className="event-icon-data">
+                    <img src="/calendar.png" className="event-icon" alt="Calendar Icon" />
+                    <p className="event-meta">
+                        {event.date} • {event.time}
+                    </p>
+                </div>
+                <div className="event-icon-data">
+                    <img src="/location.png" className="event-icon" alt="Location Icon" />
+                    <p className="event-meta">
+                        {event.location}
+                    </p>
+                </div>
 
                 <div className="event-capacity">
-                    <span>
-                        {event.attendees.length}/{event.capacity}
-                    </span>
+                    <div className="event-icon-data">
+                        <img src="/users.png" className="event-icon" alt="Capacity Icon" />
+                        <span>
+                            {event.attendees.length}/{event.capacity}
+                        </span>
+                    </div>
 
                     <div className="capacity-bar">
                         <div

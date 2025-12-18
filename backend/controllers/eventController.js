@@ -148,33 +148,6 @@ export const joinEventController = async (req, res) => {
         const { id } = req.params;
         const userId = req.user.id;
 
-        const event = await EventModel.findById(id);
-        if (!event) {
-            return res.status(404).send({
-                success: false,
-                message: "Event not found"
-            });
-        }
-
-        // Check already joined
-        const alreadyJoined = event.attendees.some(
-            (attendee) => attendee._id.toString() === userId
-        );
-
-        if (alreadyJoined) {
-            return res.status(400).send({
-                success: false,
-                message: "You have already joined this event"
-            });
-        }
-
-        if (event.attendees.length >= event.capacity) {
-            return res.status(400).send({
-                success: false,
-                message: "Event is full"
-            });
-        }
-
         const user = await UserModel.findById(userId).select("name email");
         if (!user) {
             return res.status(404).send({
@@ -183,19 +156,60 @@ export const joinEventController = async (req, res) => {
             });
         }
 
-        event.attendees.push({
-            _id: user._id,
-            name: user.name,
-            mail: user.email,
-            joinedAt: new Date()
-        });
+        const updatedEvent = await EventModel.findOneAndUpdate(
+            {
+                _id: id,
+                "attendees._id": { $ne: userId },
+                $expr: {
+                    $lt: [{ $size: "$attendees" }, "$capacity"]
+                }
+            },
+            {
+                $push: {
+                    attendees: {
+                        _id: user._id,
+                        name: user.name,
+                        mail: user.email,
+                        joinedAt: new Date()
+                    }
+                }
+            },
+            {
+                new: true
+            }
+        );
 
-        await event.save();
+        if (!updatedEvent) {
+            const event = await EventModel.findById(id);
+
+            if (!event) {
+                return res.status(404).send({
+                    success: false,
+                    message: "Event not found"
+                });
+            }
+
+            const alreadyJoined = event.attendees.some(
+                a => a._id.toString() === userId
+            );
+
+            if (alreadyJoined) {
+                return res.status(400).send({
+                    success: false,
+                    message: "You have already joined this event"
+                });
+            }
+
+            return res.status(400).send({
+                success: false,
+                message: "Event is full"
+            });
+        }
 
         res.status(200).send({
             success: true,
             message: "Successfully joined the event",
-            event
+            event: updatedEvent
         });
     } catch (error) {
         console.error(error);

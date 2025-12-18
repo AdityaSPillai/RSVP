@@ -38,15 +38,11 @@ const Navbar = () => {
                 </Link>
 
                 <div className="nav-actions">
-                    <div className="nav-links">
-                        <Link to="/discover" className="nav-item">Discover</Link>
-                    </div>
-
                     {auth.user ? (
                         <>
                             <Link to="/create-event" className="btn-create">
                                 <img src="/plusw.png" alt="Plus" className="btn-create-logo" />
-                                Create Event
+                                <span className="btn-create-text">Create Event</span>
                             </Link>
                             <div className="user-menu" ref={dropdownRef}>
                                 <button
@@ -65,7 +61,6 @@ const Navbar = () => {
                                         userEmail={auth.user.email}
                                         onLogout={handleLogout}
                                         onClose={() => setOpen(false)}
-                                        showMobileActions
                                     />
                                 )}
                             </div>

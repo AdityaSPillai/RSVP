@@ -60,12 +60,6 @@
     color: white;
 }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
 .nav-item {
     font-size: 0.875rem;
     font-weight: 500;
@@ -229,11 +223,14 @@
 }
 
 @media (max-width: 768px) {
-    .nav-links {
-        display: none;
+    .btn-create {
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        width: 36px;
+        justify-content: center;
     }
 
-    .btn-create {
+    .btn-create-text {
         display: none;
     }
 }

@@ -48,6 +48,9 @@
 .form-group input,
 .form-group textarea,
 .form-group select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     padding: 0.75rem 0.9rem;
     border-radius: 10px;
     border: 1px solid var(--border-color);
@@ -139,4 +142,10 @@
     color: var(--text-secondary);
     margin-top: 0.25rem;
     display: block;
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }

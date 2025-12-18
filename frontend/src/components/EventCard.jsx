@@ -6,6 +6,15 @@ import '../styles/EventCard.css';
 const EventCard = ({ event, refresh, onEdit }) => {
     const { auth } = useAuth();
     const navigate = useNavigate();
+    const CATEGORY_COLORS = {
+        Conference: "#F2545B",
+        Workshop: "#A93F55",
+        Meetup: "#19323C",
+        Party: "#869596",
+        Sports: "#C0ABA4",
+        Music: "#A6857E",
+        Other: "#8C5E58"
+    };
 
     const isAttending =
         auth.user &&
@@ -33,6 +42,10 @@ const EventCard = ({ event, refresh, onEdit }) => {
         refresh();
     };
 
+    const handleLoginRedirect = () => {
+        navigate('/login');
+    };
+
     return (
         <article className="event-card">
             {/* IMAGE HEADER */}
@@ -47,7 +60,13 @@ const EventCard = ({ event, refresh, onEdit }) => {
                     <img src="/default.jpg" alt="Default Cover Image" className="event-image" />
                 )}
 
-                <span className="event-badge category">
+                <span
+                    className="event-badge category"
+                    style={{
+                        backgroundColor: CATEGORY_COLORS[event.category] || CATEGORY_COLORS.Other,
+                        color: "#fff"
+                    }}
+                >
                     {event.category}
                 </span>
 
@@ -109,25 +128,37 @@ const EventCard = ({ event, refresh, onEdit }) => {
                 </div>
 
                 {isHost ? (
-                    <button className="btn-secondary-event" onClick={() => onEdit && onEdit(event)}>
+                    <button
+                        className="btn-secondary-event"
+                        onClick={() => onEdit && onEdit(event)}
+                    >
                         Edit Event
                     </button>
+                ) : !auth.user ? (
+                    isFull ? (
+                        <button className="btn-disabled-event" disabled>
+                            Full
+                        </button>
+                    ) : (
+                        <button
+                            className="btn-primary-event"
+                            onClick={handleLoginRedirect}
+                        >
+                            Login to Join
+                        </button>
+                    )
+                ) : isAttending ? (
+                    <button className="btn-secondary-event" onClick={leaveEvent}>
+                        Leave Event
+                    </button>
+                ) : isFull ? (
+                    <button className="btn-disabled-event" disabled>
+                        Full
+                    </button>
                 ) : (
-                    <>
-                        {isAttending ? (
-                            <button className="btn-secondary-event" onClick={leaveEvent}>
-                                Leave Event
-                            </button>
-                        ) : isFull ? (
-                            <button className="btn-disabled-event" disabled>
-                                Full
-                            </button>
-                        ) : (
-                            <button className="btn-primary-event" onClick={joinEvent}>
-                                Join · {spotsLeft} left
-                            </button>
-                        )}
-                    </>
+                    <button className="btn-primary-event" onClick={joinEvent}>
+                        Join · {spotsLeft} left
+                    </button>
                 )}
             </div>
         </article>

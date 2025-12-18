@@ -7,7 +7,8 @@ import {
     joinEventController,
     leaveEventController,
     getUserEventsController,
-    updateEventController
+    updateEventController,
+    getAttendingEventsController
 } from "../controllers/eventController.js";
 import multer from "multer";
 
@@ -39,6 +40,7 @@ router.get('/user-events', requireAuth, getUserEventsController);
 router.put('/update/:id', requireAuth, upload.single('image'), updateEventController);
 router.put('/join/:id', requireAuth, joinEventController);
 router.put('/leave/:id', requireAuth, leaveEventController);
+router.get('/attending', requireAuth, getAttendingEventsController);
 
 // Generic ID route must be last
 router.get('/:id', getEventByIdController);

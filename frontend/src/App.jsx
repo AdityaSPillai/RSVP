@@ -6,7 +6,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DiscoverEvents from './pages/DiscoverEvents';
 import CreateEvent from './pages/CreateEvent';
-import MyEvents from './pages/MyEvents';
+import Dashboard from './pages/Dashboard';
 import { useAuth } from './context/AuthContext';
 
 // Protected Route wrapper
@@ -34,9 +34,9 @@ function App() {
           </ProtectedRoute>
         } />
 
-        <Route path="my-events" element={
+        <Route path="dashboard" element={
           <ProtectedRoute>
-            <MyEvents />
+            <Dashboard />
           </ProtectedRoute>
         } />
 

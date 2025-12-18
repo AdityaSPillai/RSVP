@@ -277,3 +277,25 @@ export const updateEventController = async (req, res) => {
         });
     }
 };
+
+export const getAttendingEventsController = async (req, res) => {
+    try {
+        const events = await EventModel.find({
+            attendees: req.user.id
+        })
+            .populate('host', 'name')
+            .populate('attendees', 'name')
+            .sort({ createdAt: -1 });
+
+        res.status(200).send({
+            success: true,
+            events
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: 'Error fetching attending events',
+            error: error.message
+        });
+    }
+};

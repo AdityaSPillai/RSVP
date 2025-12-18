@@ -79,7 +79,7 @@
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .btn-create {
@@ -151,4 +151,79 @@
 
 .btn-signup:hover {
     background-color: #1f2937;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-avatar-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.user-avatar-btn img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.nav-auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Outer glow container */
+.login-glow-btn {
+    text-decoration: none;
+}
+
+.login-glow-btn {
+    width: 104px;
+    height: 39px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    background: linear-gradient(to bottom right,
+            #515866 0%,
+            rgba(81, 88, 102, 0) 30%);
+    background-color: rgba(81, 88, 102, 0.2);
+    transition: 0.3s ease;
+}
+
+/* Hover / focus glow */
+.login-glow-btn:hover,
+.login-glow-btn:focus {
+    background-color: rgba(81, 88, 102, 0.7);
+    box-shadow: 0 0 10px rgba(81, 88, 102, 0.5);
+}
+
+/* Inner dark pill */
+.login-glow-inner {
+    width: 100px;
+    height: 35px;
+    border-radius: 13px;
+    background-color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    color: black;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Icon */
+.login-glow-inner img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }

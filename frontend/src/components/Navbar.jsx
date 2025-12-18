@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState, useRef, useEffect } from 'react';
+import UserDropdown from './UserDropdown';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navbar.css';
@@ -6,11 +8,24 @@ import '../styles/Navbar.css';
 const Navbar = () => {
     const { auth, logout } = useAuth();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <nav className="navbar">
@@ -25,7 +40,6 @@ const Navbar = () => {
                 <div className="nav-actions">
                     <div className="nav-links">
                         <Link to="/discover" className="nav-item">Discover</Link>
-                        {auth.user && <Link to="/my-events" className="nav-item">My Events</Link>}
                     </div>
 
                     {auth.user ? (
@@ -34,19 +48,34 @@ const Navbar = () => {
                                 <img src="/plus.png" alt="Plus" className="btn-create-logo" />
                                 Create Event
                             </Link>
-                            <div className="user-menu">
-                                <div className="user-avatar">
-                                    <img src={`https://ui-avatars.com/api/?name=${auth.user.name}&background=random`} alt={auth.user.name} />
-                                </div>
-                                <button onClick={handleLogout} className="btn-logout">
-                                    Sign out
+                            <div className="user-menu" ref={dropdownRef}>
+                                <button
+                                    className="user-avatar-btn"
+                                    onClick={() => setOpen(prev => !prev)}
+                                >
+                                    <img
+                                        src={`https://ui-avatars.com/api/?name=${auth.user.name}&background=random`}
+                                        alt={auth.user.name}
+                                    />
                                 </button>
+
+                                {open && (
+                                    <UserDropdown
+                                        userName={auth.user.name}
+                                        userEmail={auth.user.email}
+                                        onLogout={handleLogout}
+                                    />
+                                )}
                             </div>
                         </>
                     ) : (
-                        <div className="flex items-center gap-4">
-                            <Link to="/login" className="btn-login">Log in</Link>
-                            <Link to="/signup" className="btn-signup">Sign up</Link>
+                        <div className="nav-auth-buttons">
+                            <Link to="/login" className="login-glow-btn">
+                                <div className="login-glow-inner">
+                                    <img src="/user.png" alt="User" />
+                                    <span>Log In</span>
+                                </div>
+                            </Link>
                         </div>
                     )}
                 </div>

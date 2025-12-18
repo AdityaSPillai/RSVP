@@ -73,7 +73,7 @@
     gap: 0.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: var(--shadow-lg);
-    width: 15vw;
+    width: 200px;
 }
 
 .landing-container .btn-primary:hover {

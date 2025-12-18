@@ -71,7 +71,7 @@ const EditEventModal = ({ event, onClose, onUpdate }) => {
             <div
                 className="login-modal-content"
                 onClick={e => e.stopPropagation()}
-                style={{ maxWidth: '600px', width: '90%' }}
+                style={{ maxWidth: '800px', width: '90%' }}
             >
                 <div className="modal-scroll-content">
                     <div className="create-event-header">

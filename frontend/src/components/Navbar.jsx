@@ -32,7 +32,7 @@ const Navbar = () => {
             <div className="nav-container">
                 <Link to="/" className="nav-logo">
                     <div className="logo-icon">
-                        <img src="/calendarw.png" alt="Calendar" className="logo-icon w" />
+                        <img src="/rsvpb.png" alt="Logo" className="logo-icons" />
                     </div>
                     <span>Eventify</span>
                 </Link>

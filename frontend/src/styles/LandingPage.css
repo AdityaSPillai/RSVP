@@ -108,28 +108,3 @@
         font-size: 4rem;
     }
 }
-
-/* Decorative blobs */
-.blob {
-    position: absolute;
-    z-index: -10;
-    width: 24rem;
-    height: 24rem;
-    border-radius: 9999px;
-    filter: blur(64px);
-    opacity: 0.3;
-}
-
-.blob-purple {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #d8b4fe;
-}
-
-.blob-blue {
-    bottom: 0;
-    right: 0;
-    transform: translate(30%, 30%);
-    background-color: #bfdbfe;
-}

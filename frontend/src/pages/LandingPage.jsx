@@ -28,10 +28,6 @@ const LandingPage = () => {
                     Get Started Free
                 </Link>
             </div>
-
-            {/* Dynamic background elements */}
-            <div className="blob blob-purple"></div>
-            <div className="blob blob-blue"></div>
         </div>
     );
 };

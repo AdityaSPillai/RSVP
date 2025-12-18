@@ -35,9 +35,16 @@
 }
 
 .logo-icon {
-    width: 2rem;
-    height: 2rem;
-    background-color: var(--primary-color);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.logo-icons {
+    width: 3rem;
+    height: 3rem;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;

@@ -42,10 +42,27 @@ const eventSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  attendees: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }]
+  attendees: [
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      },
+      mail: {
+        type: String,
+        required: true
+      },
+      joinedAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ]
 }, {
   timestamps: true
 });

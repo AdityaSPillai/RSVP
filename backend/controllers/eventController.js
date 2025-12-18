@@ -1,4 +1,5 @@
 import EventModel from "../schema/eventSchema.js";
+import UserModel from "../schema/userSchema.js";
 
 // Create a new event
 export const createEventController = async (req, res) => {
@@ -75,7 +76,7 @@ export const getEventsController = async (req, res) => {
             sortOption = null;
         }
 
-        let events = await EventModel.find(query).populate('host', 'name email').populate('attendees', 'name');
+        let events = await EventModel.find(query).populate('host', 'name email');
 
         if (sortOption) {
             events = events.sort((a, b) => {
@@ -117,9 +118,7 @@ export const getEventsController = async (req, res) => {
 export const getEventByIdController = async (req, res) => {
     try {
         const { id } = req.params;
-        const event = await EventModel.findById(id)
-            .populate('host', 'name email')
-            .populate('attendees', 'name');
+        const event = await EventModel.findById(id).populate('host', 'name email');
 
         if (!event) {
             return res.status(404).send({
@@ -157,7 +156,12 @@ export const joinEventController = async (req, res) => {
             });
         }
 
-        if (event.attendees.includes(userId)) {
+        // Check already joined
+        const alreadyJoined = event.attendees.some(
+            (attendee) => attendee._id.toString() === userId
+        );
+
+        if (alreadyJoined) {
             return res.status(400).send({
                 success: false,
                 message: "You have already joined this event"
@@ -171,7 +175,21 @@ export const joinEventController = async (req, res) => {
             });
         }
 
-        event.attendees.push(userId);
+        const user = await UserModel.findById(userId).select("name email");
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        event.attendees.push({
+            _id: user._id,
+            name: user.name,
+            mail: user.email,
+            joinedAt: new Date()
+        });
+
         await event.save();
 
         res.status(200).send({
@@ -203,14 +221,21 @@ export const leaveEventController = async (req, res) => {
             });
         }
 
-        if (!event.attendees.includes(userId)) {
+        const hasJoined = event.attendees.some(
+            attendee => attendee._id.toString() === userId
+        );
+
+        if (!hasJoined) {
             return res.status(400).send({
                 success: false,
                 message: "You have not joined this event"
             });
         }
 
-        event.attendees = event.attendees.filter(attendeeId => attendeeId.toString() !== userId);
+        event.attendees = event.attendees.filter(
+            attendee => attendee._id.toString() !== userId
+        );
+
         await event.save();
 
         res.status(200).send({
@@ -233,7 +258,6 @@ export const getUserEventsController = async (req, res) => {
     try {
         const events = await EventModel.find({ host: req.user.id })
             .populate('host', 'name email')
-            .populate('attendees', 'name')
             .sort({ createdAt: -1 });
 
         res.status(200).send({
@@ -311,10 +335,9 @@ export const updateEventController = async (req, res) => {
 export const getAttendingEventsController = async (req, res) => {
     try {
         const events = await EventModel.find({
-            attendees: req.user.id
+            "attendees._id": req.user.id
         })
             .populate('host', 'name')
-            .populate('attendees', 'name')
             .sort({ createdAt: -1 });
 
         res.status(200).send({

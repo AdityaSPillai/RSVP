@@ -6,6 +6,7 @@ import '../styles/LoginModal.css'; // Reuse some modal styles
 const EditEventModal = ({ event, onClose, onUpdate }) => {
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(event.image);
+    const [removeImage, setRemoveImage] = useState(false);
 
     const [formData, setFormData] = useState({
         title: event.title,
@@ -46,7 +47,11 @@ const EditEventModal = ({ event, onClose, onUpdate }) => {
             eventData.append("location", formData.location);
             eventData.append("category", formData.category);
             eventData.append("capacity", formData.capacity);
-            if (formData.image) {
+            if (formData.image === "") {
+                eventData.append("image", "");
+            }
+
+            if (formData.image instanceof File) {
                 eventData.append("image", formData.image);
             }
 
@@ -64,6 +69,15 @@ const EditEventModal = ({ event, onClose, onUpdate }) => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleRemoveImage = () => {
+        setImagePreview(null);
+        setFormData((prev) => ({
+            ...prev,
+            image: ""
+        }));
+        setRemoveImage(true);
     };
 
     return (
@@ -174,21 +188,31 @@ const EditEventModal = ({ event, onClose, onUpdate }) => {
 
                         <div className="form-group">
                             <label htmlFor="image">Event Image</label>
-                            <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="file-input"
-                            />
+                            <div className="file-input-container">
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    className="file-input"
+                                />
+                                {imagePreview && (
+                                    <button
+                                        type="button"
+                                        className="remove-image-btn"
+                                        onClick={handleRemoveImage}
+                                    >
+                                        Remove cover image
+                                    </button>
+                                )}
+                            </div>
                             {imagePreview && (
-                                <div className="image-preview-container" style={{ maxHeight: '150px', overflow: 'hidden', borderRadius: '10px', marginTop: '10px' }}>
+                                <div className="image-preview-container">
                                     <img
                                         src={imagePreview}
                                         alt="Preview"
                                         className="image-preview"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
                                 </div>
                             )}

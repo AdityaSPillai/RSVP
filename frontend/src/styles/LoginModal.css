@@ -265,3 +265,31 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
 }
+
+.remove-image-btn {
+  border: 2px solid transparent;
+  background: none;
+  color: #dc2626;
+  font-size: 0.85rem;
+  cursor: pointer;
+  align-items: center;
+}
+
+.remove-image-btn:hover {
+  border: 2px solid #dc2626;
+}
+
+.image-preview {
+  max-width: 600px;
+  max-height: 500px;
+}
+
+.file-input-container {
+  display: flex;
+  gap: 1vw;
+  flex-wrap: wrap;
+}
+
+.file-input {
+  flex: 1;
+}

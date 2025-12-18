@@ -247,19 +247,22 @@ export const updateEventController = async (req, res) => {
             });
         }
 
-        // Handle image update if exists
+        if (req.body.image === "") {
+            event.image = "";
+        }
+
         if (req.file) {
             const image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
             event.image = image;
         }
 
-        event.title = title || event.title;
-        event.description = description || event.description;
-        event.date = date || event.date;
-        event.time = time || event.time;
-        event.location = location || event.location;
-        event.category = category || event.category;
-        event.capacity = capacity || event.capacity;
+        if (title !== undefined) event.title = title;
+        if (description !== undefined) event.description = description;
+        if (date !== undefined) event.date = date;
+        if (time !== undefined) event.time = time;
+        if (location !== undefined) event.location = location;
+        if (category !== undefined) event.category = category;
+        if (capacity !== undefined) event.capacity = capacity;
 
         await event.save();
 

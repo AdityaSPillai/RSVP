@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/Dashboard.css';
-import MyEventsTab from '../components/dashboard/MyEventsTab';
-import AttendingTab from '../components/dashboard/AttendingTab';
+import MyEventsTab from '../components/Dashboard/MyEventsTab';
+import AttendingTab from '../components/Dashboard/AttendingTab';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('my-events');

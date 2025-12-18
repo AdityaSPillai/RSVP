@@ -65,7 +65,8 @@ const EditEventModal = ({ event, onClose, onUpdate }) => {
             }
         } catch (error) {
             console.error("Error updating event:", error);
-            alert("Failed to update event");
+            const serverMessage = error?.response?.data?.message || "Failed to update event";
+            alert(serverMessage);
         } finally {
             setLoading(false);
         }

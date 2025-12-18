@@ -298,6 +298,17 @@ export const updateEventController = async (req, res) => {
             });
         }
 
+        // 🚨 Capacity safety check
+        if (
+            capacity !== undefined &&
+            Number(capacity) < event.attendees.length
+        ) {
+            return res.status(400).send({
+                success: false,
+                message: `Capacity cannot be less than current attendees (${event.attendees.length})`
+            });
+        }
+
         if (req.body.image === "") {
             event.image = "";
         }

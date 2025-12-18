@@ -151,6 +151,18 @@ button {
     cursor: not-allowed;
 }
 
+.event-logo-text-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon-event-card {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
 /* RESPONSIVE */
 @media (max-width: 640px) {
     .event-image-wrapper {

@@ -85,9 +85,12 @@ const EventCard = ({ event, refresh, onEdit }) => {
 
             {/* FOOTER */}
             <div className="event-footer">
-                <span className="event-host">
-                    {event.host?.name || 'Unknown Host'}
-                </span>
+                <div className="event-logo-text-group">
+                    <img src={`https://ui-avatars.com/api/?name=${event.host?.name || 'Unknown Host'}&background=random`} alt={event.host?.name || 'Unknown Host'} className="logo-icon-event-card" />
+                    <span className="event-host">
+                        {event.host?.name || 'Unknown Host'}
+                    </span>
+                </div>
 
                 {isHost ? (
                     <button className="btn-secondary-event" onClick={() => onEdit && onEdit(event)}>

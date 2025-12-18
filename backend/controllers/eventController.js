@@ -50,7 +50,7 @@ export const createEventController = async (req, res) => {
 // Get all events
 export const getEventsController = async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { category, search, sort } = req.query;
         let query = {};
 
         if (category && category !== 'All Categories') {
@@ -65,10 +65,37 @@ export const getEventsController = async (req, res) => {
             ];
         }
 
-        const events = await EventModel.find(query)
-            .populate('host', 'name email')
-            .populate('attendees', 'name') // Populate attendees to check if user joined
-            .sort({ createdAt: -1 });
+        let sortOption = { createdAt: -1 };
+
+        if (sort === 'date') {
+            sortOption = { date: 1 };
+        }
+
+        if (sort === 'popular') {
+            sortOption = null;
+        }
+
+        let events = await EventModel.find(query).populate('host', 'name email').populate('attendees', 'name');
+
+        if (sortOption) {
+            events = events.sort((a, b) => {
+                return sortOption.date
+                    ? a.date.localeCompare(b.date)
+                    : b.createdAt - a.createdAt;
+            });
+        }
+
+        if (sort === 'popular') {
+            events.sort((a, b) => b.attendees.length - a.attendees.length);
+        }
+
+        if (sort === 'capacity') {
+            events.sort(
+                (a, b) =>
+                    (b.capacity - b.attendees.length) -
+                    (a.capacity - a.attendees.length)
+            );
+        }
 
         res.status(200).send({
             success: true,

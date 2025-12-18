@@ -12,7 +12,10 @@ const DiscoverEvents = () => {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
     const [editingEvent, setEditingEvent] = useState(null);
-    const { auth } = useAuth(); // Needed for EventCard checks implicitly, but also good practice
+    const { auth } = useAuth();
+    const [sort, setSort] = useState('date');
+    const [showSortDropdown, setShowSortDropdown] = useState(false);
+    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
     const fetchEvents = async () => {
         try {
@@ -20,6 +23,7 @@ const DiscoverEvents = () => {
             const params = {};
             if (search) params.search = search;
             if (category) params.category = category;
+            if (sort) params.sort = sort;
 
             const res = await api.get('/event/all', { params });
             setEvents(res.data.events || []);
@@ -32,7 +36,7 @@ const DiscoverEvents = () => {
 
     useEffect(() => {
         fetchEvents();
-    }, [search, category]);
+    }, [search, category, sort]);
 
     const handleEdit = (event) => {
         setEditingEvent(event);
@@ -57,16 +61,72 @@ const DiscoverEvents = () => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                    <option value="">All Categories</option>
-                    <option value="Conference">Conference</option>
-                    <option value="Workshop">Workshop</option>
-                    <option value="Meetup">Meetup</option>
-                    <option value="Party">Party</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Music">Music</option>
-                    <option value="Other">Other</option>
-                </select>
+                <div className="filter-dropdown">
+                    <button
+                        className="filter-btn"
+                        onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                    >
+                        {category || 'All Categories'}
+                    </button>
+
+                    {showCategoryDropdown && (
+                        <div className="dropdown-menu">
+                            {[
+                                'All Categories',
+                                'Conference',
+                                'Workshop',
+                                'Meetup',
+                                'Party',
+                                'Sports',
+                                'Music',
+                                'Other'
+                            ].map(cat => (
+                                <div
+                                    key={cat}
+                                    className={`dropdown-item ${category === cat ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setCategory(cat);
+                                        setShowCategoryDropdown(false);
+                                    }}
+                                >
+                                    {cat}
+                                    {category === cat && <span className="check">✓</span>}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div className="filter-dropdown">
+                    <button
+                        className="filter-btn"
+                        onClick={() => setShowSortDropdown(!showSortDropdown)}
+                    >
+                        {sort === 'date'
+                            ? 'Date (Earliest)'
+                            : sort === 'popular'
+                                ? 'Most Popular'
+                                : 'Largest Capacity'}
+                    </button>
+
+                    {showSortDropdown && (
+                        <div className="dropdown-menu">
+                            <div className={`dropdown-item ${sort === 'date' ? 'active' : ''}`}
+                                onClick={() => { setSort('date'); setShowSortDropdown(false); }}>
+                                Date (Earliest) {sort === 'date' && <span className="check">✓</span>}
+                            </div>
+
+                            <div className={`dropdown-item ${sort === 'popular' ? 'active' : ''}`}
+                                onClick={() => { setSort('popular'); setShowSortDropdown(false); }}>
+                                Most Popular {sort === 'popular' && <span className="check">✓</span>}
+                            </div>
+
+                            <div className={`dropdown-item ${sort === 'capacity' ? 'active' : ''}`}
+                                onClick={() => { setSort('capacity'); setShowSortDropdown(false); }}>
+                                Largest Capacity {sort === 'capacity' && <span className="check">✓</span>}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </section>
 
             {loading ? (

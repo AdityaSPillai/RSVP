@@ -1,9 +1,18 @@
 .navbar {
-    background-color: var(--bg-card);
-    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 50;
+    isolation: isolate;
+
+    /* Translucent background */
+    background: rgba(255, 255, 255, 0.75);
+
+    /* Glass effect */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    /* Subtle separation */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .nav-container {

@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(morgan('dev'))
 app.use(cors({
   origin: [
+    'https://rsvp-nqp0.onrender.com',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
   ],

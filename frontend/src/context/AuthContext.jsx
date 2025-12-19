@@ -21,6 +21,20 @@ export const AuthProvider = ({ children }) => {
                     token: storedToken,
                     loading: false,
                 });
+                try {
+                    const parsedUser = JSON.parse(storedUser);
+                    const userId = parsedUser.id || parsedUser._id;
+                    if (!userId) {
+                        console.warn("User ID missing, skipping fetch");
+                        return;
+                    }
+
+                    const res = await api.get(`/auth/user/${userId}`);
+                    if (res.data?.user) {
+                        localStorage.setItem("auth_user", JSON.stringify(res.data.user));
+                        setAuth(prev => ({ ...prev, user: res.data.user }));
+                    }
+                } catch { }
             } else {
                 setAuth((prev) => ({ ...prev, loading: false }));
             }
@@ -72,8 +86,16 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
+    const updateAuthUser = (updatedUser) => {
+        localStorage.setItem("auth_user", JSON.stringify(updatedUser));
+        setAuth(prev => ({
+            ...prev,
+            user: updatedUser
+        }));
+    };
+
     return (
-        <AuthContext.Provider value={{ auth, login, signup, logout }}>
+        <AuthContext.Provider value={{ auth, login, signup, logout, updateAuthUser }}>
             {children}
         </AuthContext.Provider>
     );

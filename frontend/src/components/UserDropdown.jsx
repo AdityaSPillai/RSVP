@@ -28,11 +28,6 @@ const UserDropdown = ({ userName, userEmail, onLogout, onClose }) => {
                 <span>Discover</span>
             </Link>
 
-            <Link to="/profile" className="dropdown-item" onClick={onClose}>
-                <img src="/user.png" alt="Profile" />
-                <span>Profile</span>
-            </Link>
-
             <Link to="/dashboard" className="dropdown-item" onClick={onClose}>
                 <img src="/dashboard.png" alt="Dashboard" />
                 <span>Dashboard</span>

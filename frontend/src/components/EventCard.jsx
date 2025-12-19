@@ -124,7 +124,7 @@ const EventCard = ({ event, refresh, onEdit }) => {
             {/* FOOTER */}
             <div className="event-footer">
                 <div className="event-logo-text-group">
-                    <img src={`https://ui-avatars.com/api/?name=${event.host?.name || 'Unknown Host'}&background=random`} alt={event.host?.name || 'Unknown Host'} className="logo-icon-event-card" />
+                    <img src={event.host?.profileImage || `https://ui-avatars.com/api/?name=${event.host?.name || 'Unknown Host'}&background=random`} alt={event.host?.name || 'Unknown Host'} className="logo-icon-event-card" />
                     <span className="event-host">
                         {event.host?.name || 'Unknown Host'}
                     </span>

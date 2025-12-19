@@ -76,7 +76,7 @@ export const getEventsController = async (req, res) => {
             sortOption = null;
         }
 
-        let events = await EventModel.find(query).populate('host', 'name email');
+        let events = await EventModel.find(query).populate('host', 'name email profileImage');
 
         if (sortOption) {
             events = events.sort((a, b) => {
@@ -118,7 +118,7 @@ export const getEventsController = async (req, res) => {
 export const getEventByIdController = async (req, res) => {
     try {
         const { id } = req.params;
-        const event = await EventModel.findById(id).populate('host', 'name email');
+        const event = await EventModel.findById(id).populate('host', 'name email profileImage');
 
         if (!event) {
             return res.status(404).send({
@@ -148,7 +148,7 @@ export const joinEventController = async (req, res) => {
         const { id } = req.params;
         const userId = req.user.id;
 
-        const user = await UserModel.findById(userId).select("name email");
+        const user = await UserModel.findById(userId).select("name email profileImage");
         if (!user) {
             return res.status(404).send({
                 success: false,
@@ -263,7 +263,7 @@ export const leaveEventController = async (req, res) => {
 export const getUserEventsController = async (req, res) => {
     try {
         const events = await EventModel.find({ host: req.user.id })
-            .populate('host', 'name email')
+            .populate('host', 'name email profileImage')
             .sort({ createdAt: -1 });
 
         res.status(200).send({

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../styles/Dashboard.css';
 import MyEventsTab from '../components/Dashboard/MyEventsTab';
 import AttendingTab from '../components/Dashboard/AttendingTab';
+import ProfileTab from '../components/Dashboard/ProfileTab';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('my-events');
@@ -25,12 +26,20 @@ const Dashboard = () => {
                     >
                         Attending
                     </button>
+
+                    <button
+                        className={`sidebar-tab ${activeTab === 'profile' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('profile')}
+                    >
+                        Profile
+                    </button>
                 </div>
 
                 {/* RIGHT CONTENT */}
                 <div className="main-content-area">
                     {activeTab === 'my-events' && <MyEventsTab />}
                     {activeTab === 'attending' && <AttendingTab />}
+                    {activeTab === 'profile' && <ProfileTab />}
                 </div>
 
             </div>

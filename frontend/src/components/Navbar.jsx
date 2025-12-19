@@ -50,7 +50,7 @@ const Navbar = () => {
                                     onClick={() => setOpen(prev => !prev)}
                                 >
                                     <img
-                                        src={`https://ui-avatars.com/api/?name=${auth.user.name}&background=random`}
+                                        src={auth.user.profileImage || `https://ui-avatars.com/api/?name=${auth.user.name}&background=random`}
                                         alt={auth.user.name}
                                     />
                                 </button>

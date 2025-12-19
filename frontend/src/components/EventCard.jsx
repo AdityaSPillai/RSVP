@@ -88,7 +88,26 @@ const EventCard = ({ event, refresh, onEdit }) => {
 
             {/* CONTENT */}
             <div className="event-card-body">
-                <h3 className="event-title">{event.title}</h3>
+                <div
+                    className="title-tooltip-wrapper"
+                    onMouseMove={(e) => {
+                        const maxX = 300;
+
+                        const x = Math.min(e.nativeEvent.offsetX, maxX);
+                        const y = e.nativeEvent.offsetY;
+
+                        e.currentTarget.style.setProperty("--x", `${x}px`);
+                        e.currentTarget.style.setProperty("--y", `${y}px`);
+                    }}
+                >
+                    <h3 className="event-title">
+                        {event.title}
+                    </h3>
+
+                    <span className="title-tooltip">
+                        {event.title}
+                    </span>
+                </div>
                 <div className="event-icon-data">
                     <img src="/calendar.png" className="event-icon" alt="Calendar Icon" />
                     <p className="event-meta">
@@ -125,9 +144,14 @@ const EventCard = ({ event, refresh, onEdit }) => {
             <div className="event-footer">
                 <div className="event-logo-text-group">
                     <img src={event.host?.profileImage || `https://ui-avatars.com/api/?name=${event.host?.name || 'Unknown Host'}&background=random`} alt={event.host?.name || 'Unknown Host'} className="logo-icon-event-card" />
-                    <span className="event-host">
-                        {event.host?.name || 'Unknown Host'}
-                    </span>
+                    <div className="tooltip-wrapper host-tooltip">
+                        <span className="event-host">
+                            {event.host?.name || "Unknown"}
+                        </span>
+                        <span className="tooltip-text">
+                            {event.host?.name || "Unknown"}
+                        </span>
+                    </div>
                 </div>
 
                 {isHost ? (
